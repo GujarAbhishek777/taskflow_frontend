@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { ForgotPassword } from './ForgotPassword'; // Import ForgotPassword component
 
-export function SignIn({ onToggle }) {
+export default function SignIn({ onToggle }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);

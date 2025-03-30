@@ -7,6 +7,9 @@ import {
   BarChart,
   ClipboardList
 } from 'lucide-react';
+import logo from '../assets/logo.png'; 
+import { useNavigate } from "react-router-dom";
+
 
 const features = [
   {
@@ -48,10 +51,38 @@ const quickActions = [
   { name: 'Settings', color: 'bg-gray-500' }
 ];
 
-export function Home() {
+export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
+        <div className="flex justify-between items-center px-6 py-4 bg-white shadow-md">
+    {/* Logo on the left */}
+    <div>
+      <img src={logo} style={{ maxWidth: "150px" }} alt="TaskFlow Logo" />
+    </div>
+
+    {/* Sign In & Sign Up buttons on the right */}
+        <div className="flex space-x-4">
+      {/* Sign In Button */}
+      <button
+        className="bg-transparent border border-blue-600 text-blue-600 font-semibold px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-300"
+        onClick={() => navigate("/login")}
+      >
+        Sign In
+      </button>
+
+      {/* Sign Up Button */}
+      <button
+        className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 shadow-lg transition-all duration-300"
+        onClick={() => navigate("/login")}
+      >
+        Sign Up
+      </button>
+    </div>
+
+  </div>
+
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
@@ -62,7 +93,9 @@ export function Home() {
               Streamline your workflow with our powerful task management platform
             </p>
             <div className="flex justify-center space-x-4">
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+              <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+               onClick={() => navigate("/login")}
+              >
                 Get Started
               </button>
               <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
@@ -138,6 +171,21 @@ export function Home() {
           </div>
         </div>
       </div>
+
+     {/* Footer Section */}
+      <footer className="bg-gray-800 text-gray-400 text-center py-4">
+        © 2025 
+        <a 
+          href="https://scalewithabhi.in/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-blue-400 font-semibold hover:underline ml-1"
+        >
+          ScaleWithAbhi
+        </a>. 
+        All Rights Reserved.
+      </footer>
+
     </div>
   );
 }

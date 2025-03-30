@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User } from 'lucide-react';
-export function SignUp({ onToggle }) {
+export default function SignUp({ onToggle }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
