@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { AuthLayout } from './components/AuthLayout';
-import { SignIn } from './components/SignIn';
-import { SignUp } from './components/SignUp';
+import React from 'react';
+// import { AuthLayout } from './components/AuthLayout';
+// import { SignIn } from './components/SignIn';
+// import { SignUp } from './components/SignUp';
 import {Home} from './components/Home'
 
 
 
 function App() {
-  const [isSignIn, setIsSignIn] = useState(true);
+  // const [isSignIn, setIsSignIn] = useState(true);
 
-  const toggleForm = () => {
-    setIsSignIn(!isSignIn);
-  };
+  // const toggleForm = () => {
+  //   setIsSignIn(!isSignIn);
+  // };
 
   return (
     <Home/>
