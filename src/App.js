@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { AuthLayout } from './components/AuthLayout';
+import { SignIn } from './components/SignIn';
+import { SignUp } from './components/SignUp';
+import {Home} from './components/Home'
+
+
 
 function App() {
+  const [isSignIn, setIsSignIn] = useState(true);
+
+  const toggleForm = () => {
+    setIsSignIn(!isSignIn);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Abhishek - TaskFlow
-        </a>
-      </header>
-    </div>
+    <Home/>
+    // <AuthLayout
+    //   title={isSignIn ? "Welcome back" : "Create account"}
+    //   subtitle={isSignIn ? "Sign in to your account" : "Sign up for a new account"}
+    // >
+    //   {isSignIn ? (
+    //     <SignIn onToggle={toggleForm} />
+    //   ) : (
+    //     <SignUp onToggle={toggleForm} />
+    //   )}
+    // </AuthLayout>
   );
 }
 

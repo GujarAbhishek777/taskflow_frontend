@@ -1,0 +1,144 @@
+import React from 'react';
+import { 
+  CheckCircle, 
+  Users, 
+  Calendar, 
+  Bell, 
+  Settings,
+  BarChart,
+  ClipboardList
+} from 'lucide-react';
+
+const features = [
+  {
+    icon: <CheckCircle className="h-6 w-6" />,
+    title: 'Task Management',
+    description: 'Create, assign, and track tasks efficiently'
+  },
+  {
+    icon: <Users className="h-6 w-6" />,
+    title: 'Team Collaboration',
+    description: 'Work together seamlessly with your team'
+  },
+  {
+    icon: <Calendar className="h-6 w-6" />,
+    title: 'Deadline Tracking',
+    description: 'Never miss important deadlines'
+  },
+  {
+    icon: <Bell className="h-6 w-6" />,
+    title: 'Notifications',
+    description: 'Stay updated with real-time alerts'
+  },
+  {
+    icon: <BarChart className="h-6 w-6" />,
+    title: 'Analytics',
+    description: 'Track progress with detailed insights'
+  },
+  {
+    icon: <ClipboardList className="h-6 w-6" />,
+    title: 'Templates',
+    description: 'Use pre-built templates for quick setup'
+  }
+];
+
+const quickActions = [
+  { name: 'Create Task', color: 'bg-blue-500' },
+  { name: 'View Dashboard', color: 'bg-purple-500' },
+  { name: 'Team Overview', color: 'bg-green-500' },
+  { name: 'Settings', color: 'bg-gray-500' }
+];
+
+export function Home() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Welcome to TaskFlow
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-8">
+              Streamline your workflow with our powerful task management platform
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                Learn More
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {quickActions.map((action, index) => (
+              <button
+                key={index}
+                className={`${action.color} text-white p-4 rounded-lg hover:opacity-90 transition-opacity`}
+              >
+                {action.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Features Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900">
+            Everything you need to manage tasks effectively
+          </h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Powerful features to help you and your team stay organized and productive
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow"
+            >
+              <div className="text-blue-600 mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-blue-400">10k+</div>
+              <div className="mt-2 text-gray-400">Active Users</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-blue-400">50k+</div>
+              <div className="mt-2 text-gray-400">Tasks Completed</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-blue-400">99%</div>
+              <div className="mt-2 text-gray-400">Satisfaction Rate</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-blue-400">24/7</div>
+              <div className="mt-2 text-gray-400">Support</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
