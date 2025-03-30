@@ -4,7 +4,6 @@ import {
   Users, 
   Calendar, 
   Bell, 
-  Settings,
   BarChart,
   ClipboardList
 } from 'lucide-react';
