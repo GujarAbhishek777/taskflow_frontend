@@ -7,6 +7,8 @@ import Dashboard from "../Dashboard/Dashboard";
 import Tasks from "../Dashboard/Tasks";
 import Users from "../Dashboard/Users";
 import Messages from "../Dashboard/Messages";
+import Analytics from "../Dashboard/Analytics";
+
 
 
 const AppRoutes = () => {
@@ -20,6 +22,7 @@ const AppRoutes = () => {
       <Route path="/users" element={<Users />} />
       <Route path="/tasks" element={<Tasks />} />
       <Route path="/messages" element={<Messages />} />
+      <Route path="/analytics" element={<Analytics />} />
 
 
 

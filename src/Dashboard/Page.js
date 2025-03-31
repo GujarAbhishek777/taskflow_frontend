@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTasks, FaUserFriends, FaEnvelope, FaBars, FaTimes, FaBell, FaSignOutAlt,FaTachometerAlt } from "react-icons/fa";
+import { FaTasks, FaUserFriends, FaEnvelope,FaChartBar, FaBars, FaTimes, FaBell, FaSignOutAlt,FaTachometerAlt } from "react-icons/fa";
 import logo from "./../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
@@ -41,6 +41,14 @@ const Page = ({ children }) => {
               }}>
                 <FaEnvelope size={20} className="mr-3" /> {isSidebarOpen && "Messages"}
               </li>
+              <li
+              className="p-4 hover:bg-gray-700 flex items-center"
+              onClick={() => {
+                navigate('/analytics');
+              }}
+            >
+              <FaChartBar size={20} className="mr-3" /> {isSidebarOpen && 'Analytics'}
+            </li>
             </ul>
           </nav>
         </div>
