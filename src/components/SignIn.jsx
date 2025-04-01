@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { ForgotPassword } from './ForgotPassword'; // Import ForgotPassword component
+import axios from 'axios';
 
 export default function SignIn({ onToggle }) {
   const [email, setEmail] = useState('');
@@ -10,7 +11,21 @@ export default function SignIn({ onToggle }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Sign in:', { email, password });
+    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/tasks`, {
+      email,
+      password,
+    })
+    .then((response) => {
+      console.log('Sign in success:', response.data);
+      // Handle success - You might want to redirect, store the token, etc.
+    })
+    .catch((error) => {
+      console.error('Sign in error:', error);
+      // Handle error - Show error message, etc.
+    });
   };
+
+  
 
   return showForgotPassword ? (
     <ForgotPassword onToggle={() => setShowForgotPassword(false)} />

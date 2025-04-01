@@ -73,7 +73,7 @@ const Dashboard = () => {
     <Page>
           <div className="flex flex-col md:flex-row p-4 space-y-4 md:space-y-0 md:space-x-4">
             
-            <div className="w-full md:w-1/2 bg-white p-4 rounded-lg shadow">
+          <div className="w-full md:w-1/2 bg-white p-4 rounded-lg shadow">
               <h2 className="text-xl font-semibold mb-4">Task Distribution</h2>
               <Pie data={pieChartData}  options={options}/>
             </div>
