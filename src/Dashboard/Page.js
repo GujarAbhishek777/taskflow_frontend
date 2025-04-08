@@ -6,9 +6,15 @@ import { useNavigate } from "react-router-dom";
 
 const Page = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const username = localStorage.getItem('username');
+  const user = JSON.parse(localStorage.getItem('user'));
+  console.log("sdfhskfhskdf",user)
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("user");
+    navigate("/login"); // or whatever your login route is
+  };
     // Count tasks per status
     
   return (
@@ -54,7 +60,9 @@ const Page = ({ children }) => {
         </div>
         
         {/* Logout Button */}
-        <button className="p-4 hover:bg-red-600 flex items-center w-full text-left">
+        <button className="p-4 hover:bg-red-600 flex items-center w-full text-left"
+         onClick={handleLogout}
+        >
           <FaSignOutAlt size={20} className="mr-3" /> {isSidebarOpen && "Logout"}
         </button>
       </div>
@@ -87,7 +95,7 @@ const Page = ({ children }) => {
                 </div>
 
                 {/* Username */}
-                <span className="text-gray-700 font-semibold pr-10">{username || 'Abhishek Gujar'}</span>
+                <span className="text-gray-700 font-semibold pr-10">{user?.name || 'Abhishek Gujar'}</span>
             </div>
             </div>
 

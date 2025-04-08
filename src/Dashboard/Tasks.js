@@ -5,7 +5,7 @@ const Tasks = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [tasks, setTasks] = useState([
-        { id: 1, title: 'Task 1', description: 'Complete UI design.', assignedUser: 'User A', dueDate: '2025-04-10', status: 'Pending' },
+        { id: 1, title: 'Task 1', description: 'Complete UI design.', assignedUser: 'User A', dueDate: '2025-04-10', status: 'On Hold' },
         { id: 2, title: 'Task 2', description: 'Fix authentication bug.', assignedUser: 'User B', dueDate: '2025-04-12', status: 'In Progress' },
         { id: 3, title: 'Task 3', description: 'Deploy backend API.', assignedUser: 'User A', dueDate: '2025-04-15', status: 'Completed' },
         // Add more tasks as needed
@@ -150,9 +150,11 @@ const Tasks = () => {
                   required
                 >
                   <option value="">Select Status</option>
-                  <option value="Pending">Pending</option>
+                  <option value="Created">Created</option>
+                  <option value="On Hold">On Hold</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
               <div className="flex justify-end">
@@ -209,9 +211,11 @@ const Tasks = () => {
       className="border border-gray-300 rounded p-2"
     >
       <option value="">All Statuses</option>
-      <option value="Pending">Pending</option>
+      <option value="Created">Created</option>
+      <option value="On Hold">On Hold</option>
       <option value="In Progress">In Progress</option>
       <option value="Completed">Completed</option>
+      <option value="Cancelled">Cancelled</option>
       {/* Add more status options as needed */}
     </select>
   </div>

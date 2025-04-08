@@ -5,16 +5,15 @@ import { Bar } from 'react-chartjs-2';
 const Analytics = () => {
 
     const barChartData = {
-        labels: ['Created', 'Pending', 'On Hold', 'Rejected', 'Cancelled', 'Completed'],
+        labels: ['Created', 'In Progress', 'On Hold', 'Cancelled', 'Completed'],
         datasets: [
           {
             label: 'Number of Tasks',
             data: [10, 20, 5, 3, 2, 15], // Example data
             backgroundColor: [
               '#1f77b4', // Created
-              '#ff69b4', // Pending
+              '#ff69b4', // In Progress
               '#2ca02c', // On Hold
-              '#d62728', // Rejected
               '#9467bd', // Cancelled
               '#8c564b', // Completed
             ],

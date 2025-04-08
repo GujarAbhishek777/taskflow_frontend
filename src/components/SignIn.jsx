@@ -1,27 +1,63 @@
-import React, { useState } from 'react';
+import React, {  useState, useContext, useEffect} from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { ForgotPassword } from './ForgotPassword'; // Import ForgotPassword component
 import axios from 'axios';
+import Loader from './Loader';
+import { AuthContext } from '../AuthProvider';
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function SignIn({ onToggle }) {
+  const { user } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      console.log("User already logged in:", user);
+      // Redirect to dashboard or home page
+      window.location.href = "/dashboard";
+    }
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log('Sign in:', { email, password });
-    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/tasks`, {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/sign_in`, {
       email,
       password,
     })
     .then((response) => {
       console.log('Sign in success:', response.data);
+      if (response.data.token) {
+        localStorage.setItem("jwt", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      }
+              Swal.fire({
+                        title: "Success!",
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false,
+                      }).then(() => {
+                        navigate("/dashboard"); // 👈 Redirect to login after success
+                      });
       // Handle success - You might want to redirect, store the token, etc.
     })
     .catch((error) => {
       console.error('Sign in error:', error);
+           Swal.fire({
+                  title: "Error!",
+                  text: "Something went wrong. Please try again.",
+                  icon: "error",
+                  // confirmButtonText: "OK",
+                });
       // Handle error - Show error message, etc.
+    }).finally(() => {
+      setLoading(false); // Hide loader after API call completes
     });
   };
 
@@ -30,6 +66,7 @@ export default function SignIn({ onToggle }) {
   return showForgotPassword ? (
     <ForgotPassword onToggle={() => setShowForgotPassword(false)} />
   ) : (
+     <Loader  loading={loading} >
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -102,5 +139,6 @@ export default function SignIn({ onToggle }) {
         </p>
       </div>
     </form>
+    </Loader>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { 
   CheckCircle, 
   Users, 
@@ -53,6 +53,14 @@ const quickActions = [
 
 export default function Home() {
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+
+    if (token) {
+      console.log("User already logged in:", token);
+      navigate("/dashboard"); // ✅ Redirect to dashboard instead of login
+    }
+  }, []); // 
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,7 +83,7 @@ export default function Home() {
       {/* Sign Up Button */}
       <button
         className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 shadow-lg transition-all duration-300"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/login")}
       >
         Sign Up
       </button>

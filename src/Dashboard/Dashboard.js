@@ -30,12 +30,11 @@ const Dashboard = () => {
     // Chart data
 
     const pieChartData = {
-      labels: ['Created', 'Pending', 'On Hold', 'Rejected', 'Cancelled', 'Completed'],
+      labels: ['Created', 'In Progress', 'On Hold', 'Cancelled', 'Completed'],
       datasets: [
         {
-          data: [10, 20, 5, 3, 2, 15], // Example data
+          data: [10, 20, 5, 3, 2], // Example data
           backgroundColor: [
-            '#1f77b4',
             '#ff69b4',
             '#2ca02c',
             '#d62728',
