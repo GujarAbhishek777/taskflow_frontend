@@ -1,5 +1,10 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import Page from "./Page";
+import axios from 'axios';
+import Swal from "sweetalert2";
+
+
+
 
 const UserCard = ({ user }) => (
   <div className="bg-white p-4 rounded-lg shadow-md">
@@ -19,8 +24,37 @@ const Users = () => {
     lastName: '',
     email: '',
     designation: '',
+    admin: false,
+    task_creator:false,
   });
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem("jwt");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(response.data.users); // Assuming your API returns { users: [...] }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to load users.",
+          icon: "error",
+        });
+      }
+    };
+  
+    fetchUsers();
+  }, []);
+
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewUser({ ...newUser, [name]: value });
@@ -32,10 +66,39 @@ const Users = () => {
       alert('All fields are required.');
       return;
     }
+    const token = localStorage.getItem("jwt");
+    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/add_user`, newUser, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+    .then((response) => {
+      console.log('Sign in success:', response.data);
+              Swal.fire({
+                        title: "Success!",
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false,
+                      })
+                      // .then(() => {
+                      //   navigate("/dashboard"); // 👈 Redirect to login after success
+                      // });
 
-    setUsers([...users, newUser]);
-    setNewUser({ firstName: '', lastName: '', email: '', designation: '' });
-    setIsModalOpen(false);
+                      setUsers([...users, newUser]);
+                      setNewUser({ firstName: '', lastName: '', email: '', designation: '',admin: false,task_creator:false });
+                      setIsModalOpen(false);
+    })
+    .catch((error) => {
+      console.error('Sign in error:', error);
+           Swal.fire({
+                  title: "Error!",
+                  text: "Something went wrong. Please try again.",
+                  icon: "error",
+                  // confirmButtonText: "OK",
+                });
+    })
+
+
   };
     
   return (
@@ -43,12 +106,16 @@ const Users = () => {
       <div className="p-6">
       {/* Add User Button */}
       <div className="flex justify-end mb-4">
+        { user?.admin ?
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           Add User
         </button>
+        :
+        ""
+        }
       </div>
 
       {/* User Cards */}
@@ -109,6 +176,34 @@ const Users = () => {
                       className="w-full px-3 py-2 border rounded"
                       required
                     />
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <input
+                      type="checkbox"
+                      name="admin"
+                      checked={newUser.admin}
+                      onChange={(e) =>
+                        setNewUser((prev) => ({ ...prev, admin: e.target.checked }))
+                      }
+                      className="mr-2"
+                    />
+                    <label htmlFor="admin" className="text-sm text-gray-700">
+                      Make Admin
+                    </label>
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <input
+                      type="checkbox"
+                      name="task_creator"
+                      checked={newUser.task_creator}
+                      onChange={(e) =>
+                        setNewUser((prev) => ({ ...prev, task_creator: e.target.checked }))
+                      }
+                      className="mr-2"
+                    />
+                    <label htmlFor="task_creator" className="text-sm text-gray-700">
+                      Task Creator
+                    </label>
                   </div>
                   <div className="items-center px-4 py-3">
                     <button

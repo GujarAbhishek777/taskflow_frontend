@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail, Lock, User,Building } from 'lucide-react';
 import axios from 'axios';
 import Loader from './Loader';
 import Swal from "sweetalert2";
@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function SignUp({ onToggle }) {
   const [name, setName] = useState('');
+  const [last_name, setLastName] = useState('');
+  const [cname, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,12 +19,14 @@ export default function SignUp({ onToggle }) {
     e.preventDefault();
     setLoading(true);
     // Handle sign up logic here
-    console.log('Sign up:', { name, email, password });
+    console.log('Sign up:', { name,last_name, email, password ,cname});
      axios.post(`${process.env.REACT_APP_API_URL}/api/v1/sign_up`, {
         user: {
           email,
           password,
           name,
+          last_name,
+          cname
         }
         })
         .then((response) => {
@@ -60,7 +64,7 @@ export default function SignUp({ onToggle }) {
     <Loader  loading={loading} >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700">First Name</label>
           <div className="mt-1 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <User className="h-5 w-5 text-gray-400" />
@@ -70,12 +74,43 @@ export default function SignUp({ onToggle }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Admin Name"
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Last Name</label>
+          <div className="mt-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <User className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              value={last_name}
+              onChange={(e) => setLastName(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Admin Name"
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Company Name</label>
+          <div className="mt-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Building className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              value={cname}
+              onChange={(e) =>  setCompanyName(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               placeholder="John Doe"
               required
             />
           </div>
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Email</label>
           <div className="mt-1 relative">

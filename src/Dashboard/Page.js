@@ -70,8 +70,9 @@ const Page = ({ children }) => {
       {/* Main Content */}
       <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-16"}`}>
         <header className="bg-white shadow-md p-4 flex justify-between items-center">
-          <div>
+          <div className="flex items-center space-x-2">
             <img src={logo} style={{ maxWidth: "150px" }} alt="TaskFlow Logo" />
+            <span className="text-l font-semibold text-gray-700">{user?.client_name || ''}</span>
           </div>
           <div className="flex items-center space-x-4">
   {/* Notification Icon */}

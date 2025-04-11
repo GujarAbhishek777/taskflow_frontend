@@ -1,13 +1,18 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import Page from "./Page";
+import axios from 'axios';
+import Swal from "sweetalert2";
 
 const Tasks = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
+
     const [tasks, setTasks] = useState([
-        { id: 1, title: 'Task 1', description: 'Complete UI design.', assignedUser: 'User A', dueDate: '2025-04-10', status: 'On Hold' },
-        { id: 2, title: 'Task 2', description: 'Fix authentication bug.', assignedUser: 'User B', dueDate: '2025-04-12', status: 'In Progress' },
-        { id: 3, title: 'Task 3', description: 'Deploy backend API.', assignedUser: 'User A', dueDate: '2025-04-15', status: 'Completed' },
+        // { id: 1, title: 'Task 1', description: 'Complete UI design.', assignedUser: 'User A', dueDate: '2025-04-10', status: 'On Hold' },
+        // { id: 2, title: 'Task 2', description: 'Fix authentication bug.', assignedUser: 'User B', dueDate: '2025-04-12', status: 'In Progress' },
+        // { id: 3, title: 'Task 3', description: 'Deploy backend API.', assignedUser: 'User A', dueDate: '2025-04-15', status: 'Completed' },
         // Add more tasks as needed
       ]);
     
@@ -24,6 +29,8 @@ const Tasks = () => {
         dueDate: '',
         status: '',
       });
+
+      const [users, setUsers] = useState([]);
     
       const handleFilterChange = (event) => {
         const { name, value, type, checked } = event.target;
@@ -35,13 +42,38 @@ const Tasks = () => {
       };
       
     
-      const filteredTasks = tasks.filter((task) => {
+      const filteredTasks = tasks?.filter((task) => {
         return (
           (filters.user ? task.assignedUser === filters.user : true) &&
           (filters.dueDate ? task.dueDate === filters.dueDate : true) &&
           (filters.status ? task.status === filters.status : true)
         );
       });
+
+      useEffect(() => {
+          const fetchTasks = async () => {
+            try {
+              const token = localStorage.getItem("jwt");
+              const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/tasks`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              setTasks(response.data.tasks);
+              setUsers(response.data.users) // Assuming your API returns { users: [...] }
+            } catch (error) {
+              console.error("Error fetching tasks:", error);
+              Swal.fire({
+                title: "Error!",
+                text: "Failed to load tasks.",
+                icon: "error",
+              });
+            }
+          };
+        
+          fetchTasks();
+        }, []);
+      
 
 
 
@@ -65,12 +97,39 @@ const Tasks = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Process the new task data (e.g., update state, make API call)
-    console.log('New Task:', newTask);
-    setTasks(newTask)
-    closeModal();
+    const token = localStorage.getItem("jwt");
+  
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/add_task`,
+        { task: newTask }, // Assuming your API accepts a `task` object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      // Append the new task to the list
+      setTasks((prevTasks) => [...prevTasks, response.data.task]);
+  
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Task added successfully.",
+      });
+  
+      closeModal();
+    } catch (error) {
+      console.error("Error adding task:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "Something went wrong while adding the task.",
+      });
+    }
   };
 
   return (
@@ -78,12 +137,16 @@ const Tasks = () => {
   <div className="p-6 bg-gray-100 min-h-screen">
       {/* Add Task Section */}
       <div className="flex justify-end mb-4">
+        { user?.task_creator ?
         <button
           onClick={openModal}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           Add Task
         </button>
+        :
+        ""
+        }
       </div>
 
       {/* Modal */}
@@ -120,14 +183,19 @@ const Tasks = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Assigned User</label>
-                <input
-                  type="text"
+                <select
                   name="assignedUser"
                   value={newTask.assignedUser}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border rounded-lg"
                   required
-                />
+                >
+                  {users?.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.firstName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Due Date</label>
@@ -188,10 +256,12 @@ const Tasks = () => {
       className="border border-gray-300 rounded p-2"
     >
       <option value="">All Users</option>
-      {/* Dynamically populate users if available */}
-      <option value="User A">User A</option>
-      <option value="User B">User B</option>
-      {/* Add more users as needed */}
+
+      {users?.map((user) => (
+        <option key={user.id} value={user.id}>
+          {user.firstName}
+        </option>
+      ))}
     </select>
 
     {/* Due Date Filter */}
@@ -236,7 +306,7 @@ const Tasks = () => {
 </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-  {filteredTasks.map((task) => (
+  {filteredTasks?.map((task) => (
     <div key={task.id} className="bg-white p-4 rounded-lg shadow-md">
       <h3 className="text-lg font-bold">{task.title}</h3>
       <p className="text-gray-600">{task.description}</p>
