@@ -51,8 +51,11 @@ const quickActions = [
   { name: 'Settings', color: 'bg-gray-500' }
 ];
 
+
 export default function Home() {
+
   const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem("jwt");
 
@@ -60,7 +63,7 @@ export default function Home() {
       console.log("User already logged in:", token);
       navigate("/dashboard"); // ✅ Redirect to dashboard instead of login
     }
-  }, []); // 
+  }, [navigate]); // 
 
   return (
     <div className="min-h-screen bg-gray-50">
