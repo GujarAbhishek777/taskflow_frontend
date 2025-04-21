@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import Loader from './components/Loader'
 
 export const AuthContext = createContext();
 
@@ -45,7 +46,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
-      {loading ? <div className="flex items-center justify-center h-screen text-lg">🔄 Checking Authentication...</div> : children}
+      {loading ? <Loader  loading={loading} /> : children}
     </AuthContext.Provider>
   );
 };

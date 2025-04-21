@@ -20,6 +20,7 @@ const Tasks = () => {
         user: '',
         dueDate: '',
         status: '',
+        dueDatePassed:false,
       });
     
       const [newTask, setNewTask] = useState({
@@ -43,10 +44,16 @@ const Tasks = () => {
       
     
       const filteredTasks = tasks?.filter((task) => {
+
+        const isDueDatePassed = filters.dueDatePassed
+        ? new Date(task.dueDate) < new Date()
+        : true;
+
         return (
           (filters.user ? task.assignedUser === filters.user : true) &&
           (filters.dueDate ? task.dueDate === filters.dueDate : true) &&
-          (filters.status ? task.status === filters.status : true)
+          (filters.status ? task.status === filters.status : true) &&
+          isDueDatePassed
         );
       });
 
@@ -91,6 +98,7 @@ const Tasks = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log("fjsdfjdskf",value,name)
     setNewTask((prevTask) => ({
       ...prevTask,
       [name]: value,
@@ -137,7 +145,7 @@ const Tasks = () => {
   <div className="p-6 bg-gray-100 min-h-screen">
       {/* Add Task Section */}
       <div className="flex justify-end mb-4">
-        { user?.task_creator ?
+        { user?.task_creator || user?.admin ?
         <button
           onClick={openModal}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -185,11 +193,14 @@ const Tasks = () => {
                 <label className="block text-gray-700">Assigned User</label>
                 <select
                   name="assignedUser"
-                  value={newTask.assignedUser}
+                  value={newTask.assignedUser || ""}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border rounded-lg"
                   required
                 >
+                 <option value="" disabled>
+                  Select a user
+                  </option>
                   {users?.map((user) => (
                     <option key={user.id} value={user.id}>
                       {user.firstName}
@@ -249,6 +260,7 @@ const Tasks = () => {
   <h2 className="text-lg font-bold mb-4">Filter Tasks</h2>
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
     {/* User Filter */}
+    { user?.task_creator || user?.admin ?
     <select
       name="user"
       value={filters.user}
@@ -263,7 +275,10 @@ const Tasks = () => {
         </option>
       ))}
     </select>
-
+     :
+     ""
+    }
+    
     {/* Due Date Filter */}
     <input
       type="date"

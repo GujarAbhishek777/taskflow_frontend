@@ -1,15 +1,19 @@
-import React from "react";
+import React,{useState,useEffect}  from "react";
 import Page from "./Page";
 import { Bar } from 'react-chartjs-2';
+import axios from 'axios';
+import Swal from "sweetalert2";
 
 const Analytics = () => {
+
+   const [piedata, setPieData] = useState([1, 1, 1, 1, 1])
 
     const barChartData = {
         labels: ['Created', 'In Progress', 'On Hold', 'Cancelled', 'Completed'],
         datasets: [
           {
             label: 'Number of Tasks',
-            data: [10, 20, 5, 3, 2, 15], // Example data
+            data: piedata, // Example data
             backgroundColor: [
               '#1f77b4', // Created
               '#ff69b4', // In Progress
@@ -27,6 +31,31 @@ const Analytics = () => {
         aspectRatio: 3, // Adjust this value as needed
       };
   
+      useEffect(() => {
+        const fetchTasksData = async () => {
+          try {
+            const token = localStorage.getItem("jwt");
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/tasks_data`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              params:{
+                from_dash:false
+              }
+            });
+            setPieData(response.data.piedata)
+          } catch (error) {
+            console.error("Error fetching tasks:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to load tasks.",
+              icon: "error",
+            });
+          }
+        };
+      
+        fetchTasksData();
+      }, []);
       
   return (
 

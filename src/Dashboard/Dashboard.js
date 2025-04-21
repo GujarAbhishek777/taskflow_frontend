@@ -1,6 +1,8 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { Pie } from 'react-chartjs-2';
 import Page from "./Page";
+import axios from 'axios';
+import Swal from "sweetalert2";
 
 import {
   Chart as ChartJS,
@@ -28,12 +30,14 @@ ChartJS.register(
 const Dashboard = () => {
 
     // Chart data
+     const [recentTasks, setRecentTasks] = useState([])
+     const [piedata, setPieData] = useState([1, 1, 1, 1, 1])
 
     const pieChartData = {
       labels: ['Created', 'In Progress', 'On Hold', 'Cancelled', 'Completed'],
       datasets: [
         {
-          data: [10, 20, 5, 3, 2], // Example data
+          data: piedata, // Example data
           backgroundColor: [
             '#ff69b4',
             '#2ca02c',
@@ -45,28 +49,61 @@ const Dashboard = () => {
       ],
     };
 
-    const options = {
-      responsive: true,
-      maintainAspectRatio: true,
-      aspectRatio: 1.25, // Adjust this value as needed
-    };
+    const options =
+      {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1.25,
+        plugins: {
+          customCanvasBackgroundColor: {
+            color: '#f3f4f6', // Tailwind's gray-100
+          },
+        },
+      };
 
-    const recentTasks = [
-      {
-        id: 1,
-        title: 'Design Homepage',
-        description: 'Create initial designs for the homepage.',
-        dueDate: '2025-04-05',
-      },
-      {
-        id: 2,
-        title: 'Fix Login Bug',
-        description: 'Resolve the issue preventing users from logging in.',
-        dueDate: '2025-04-06',
-      },
-      // Add more tasks as needed
-    ];
+    // const recentTasks = [
+    //   {
+    //     id: 1,
+    //     title: 'Design Homepage',
+    //     description: 'Create initial designs for the homepage.',
+    //     dueDate: '2025-04-05',
+    //   },
+    //   {
+    //     id: 2,
+    //     title: 'Fix Login Bug',
+    //     description: 'Resolve the issue preventing users from logging in.',
+    //     dueDate: '2025-04-06',
+    //   },
+    //   // Add more tasks as needed
+    // ];
     
+
+    useEffect(() => {
+        const fetchTasksData = async () => {
+          try {
+            const token = localStorage.getItem("jwt");
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/tasks_data`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              params:{
+                from_dash:true
+              }
+            });
+            setRecentTasks(response.data.tasks);
+            setPieData(response.data.piedata)
+          } catch (error) {
+            console.error("Error fetching tasks:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to load tasks.",
+              icon: "error",
+            });
+          }
+        };
+      
+        fetchTasksData();
+      }, []);
     
   return (
     <Page>
@@ -74,7 +111,9 @@ const Dashboard = () => {
             
           <div className="w-full md:w-1/2 bg-white p-4 rounded-lg shadow">
               <h2 className="text-xl font-semibold mb-4">Task Distribution</h2>
+              <div className="bg-gray-100 p-4 rounded-lg">
               <Pie data={pieChartData}  options={options}/>
+              </div>
             </div>
                   {/* Recent Tasks Section */}
             <div className="w-full md:w-1/2 space-y-4">

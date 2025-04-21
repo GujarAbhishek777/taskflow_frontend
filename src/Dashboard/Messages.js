@@ -1,22 +1,20 @@
 import React,{useState,useEffect} from "react";
 import Page from "./Page";
 import ChatComponent from "./ChatComponent"
+import axios from 'axios';
+import Swal from "sweetalert2";
 
 const Messages = () => {
     
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Alice Johnson' },
-    { id: 2, name: 'Bob Smith' },
-    { id: 3, name: 'Charlie Davis' },
-  ]);
+  const [users, setUsers] = useState([]);
 
   const [messages, setMessages] = useState([
-    { id: 1, senderId: 1, receiverId: 2, content: 'Hello Bob!', timestamp: '2025-03-31T10:00:00Z' },
-    { id: 2, senderId: 2, receiverId: 1, content: 'Hi Alice! How are you?', timestamp: '2025-03-31T10:05:00Z' },
-    { id: 3, senderId: 1, receiverId: 3, content: 'Hey Charlie, are you coming to the meeting?', timestamp: '2025-03-31T11:00:00Z' },
-    { id: 4, senderId: 3, receiverId: 1, content: 'Yes, I will be there.', timestamp: '2025-03-31T11:15:00Z' },
-    { id: 5, senderId: 2, receiverId: 3, content: 'Charlie, can you send me the report?', timestamp: '2025-03-31T12:00:00Z' },
-    { id: 6, senderId: 3, receiverId: 2, content: 'Sure, sending it now.', timestamp: '2025-03-31T12:10:00Z' },
+    // { id: 1, senderId: 1, receiverId: 2, content: 'Hello Bob!', timestamp: '2025-03-31T10:00:00Z' },
+    // { id: 2, senderId: 2, receiverId: 1, content: 'Hi Alice! How are you?', timestamp: '2025-03-31T10:05:00Z' },
+    // { id: 3, senderId: 1, receiverId: 3, content: 'Hey Charlie, are you coming to the meeting?', timestamp: '2025-03-31T11:00:00Z' },
+    // { id: 4, senderId: 3, receiverId: 1, content: 'Yes, I will be there.', timestamp: '2025-03-31T11:15:00Z' },
+    // { id: 5, senderId: 2, receiverId: 3, content: 'Charlie, can you send me the report?', timestamp: '2025-03-31T12:00:00Z' },
+    // { id: 6, senderId: 3, receiverId: 2, content: 'Sure, sending it now.', timestamp: '2025-03-31T12:10:00Z' },
   ]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentUser, setCurrentUser] = useState({id:1});
@@ -27,22 +25,45 @@ const Messages = () => {
 
   // Fetch users and messages from backend or state management store
   useEffect(() => {
-    setCurrentUser({id:1})
-    setUsers([
-      { id: 1, name: 'Alice Johnson' },
-      { id: 2, name: 'Bob Smith' },
-      { id: 3, name: 'Charlie Davis' },
-    ])
-    setMessages([
-      { id: 1, senderId: 1, receiverId: 2, content: 'Hello Bob!', timestamp: '2025-03-31T10:00:00Z' },
-      { id: 2, senderId: 2, receiverId: 1, content: 'Hi Alice! How are you?', timestamp: '2025-03-31T10:05:00Z' },
-      { id: 3, senderId: 1, receiverId: 3, content: 'Hey Charlie, are you coming to the meeting?', timestamp: '2025-03-31T11:00:00Z' },
-      { id: 4, senderId: 3, receiverId: 1, content: 'Yes, I will be there.', timestamp: '2025-03-31T11:15:00Z' },
-      { id: 5, senderId: 2, receiverId: 3, content: 'Charlie, can you send me the report?', timestamp: '2025-03-31T12:00:00Z' },
-      { id: 6, senderId: 3, receiverId: 2, content: 'Sure, sending it now.', timestamp: '2025-03-31T12:10:00Z' },
-    ])
+  
+    fetchMessages();
+    // setCurrentUser({id:1})
+    // setUsers([
+    //   { id: 1, name: 'Alice Johnson' },
+    //   { id: 2, name: 'Bob Smith' },
+    //   { id: 3, name: 'Charlie Davis' },
+    // ])
+    // setMessages([
+    //   { id: 1, senderId: 1, receiverId: 2, content: 'Hello Bob!', timestamp: '2025-03-31T10:00:00Z' },
+    //   { id: 2, senderId: 2, receiverId: 1, content: 'Hi Alice! How are you?', timestamp: '2025-03-31T10:05:00Z' },
+    //   { id: 3, senderId: 1, receiverId: 3, content: 'Hey Charlie, are you coming to the meeting?', timestamp: '2025-03-31T11:00:00Z' },
+    //   { id: 4, senderId: 3, receiverId: 1, content: 'Yes, I will be there.', timestamp: '2025-03-31T11:15:00Z' },
+    //   { id: 5, senderId: 2, receiverId: 3, content: 'Charlie, can you send me the report?', timestamp: '2025-03-31T12:00:00Z' },
+    //   { id: 6, senderId: 3, receiverId: 2, content: 'Sure, sending it now.', timestamp: '2025-03-31T12:10:00Z' },
+    // ])
     // Implement data fetching logic here
   }, []);
+
+  const fetchMessages = async () => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/messages`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMessages(response.data.messages);
+      setUsers(response.data.users) 
+      setCurrentUser(response.data.current_user)// Assuming your API returns { users: [...] }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to load tasks.",
+        icon: "error",
+      });
+    }
+  };
 
   const openSendMessageModal = () => {
     setIsSendMessageModalOpen(true);
@@ -59,14 +80,55 @@ const Messages = () => {
 
   const closeConversationModal = () => {
     setIsConversationModalOpen(false);
+    fetchMessages()
     setSelectedUser(null);
   };
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() === '') return;
+  const handleSendMessage = async(from_chat = false,messge='') => {
+    console.log("sfjksdkfdsfjsdfksdfndsjn")
+    if (newMessage.trim() === '' && !from_chat) return;
+
+    const token = localStorage.getItem("jwt");
+  
+    try {
+       await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/add_message`,
+        { messg: from_chat ? messge :{content:newMessage,senderId:currentUser.id,receiverId:selectedUserId,client_id:currentUser.client_id} }, // Assuming your API accepts a `task` object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      // Append the new task to the list
+      if(!from_chat){
+
+      fetchMessages()
+
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Task added successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+     }
+  
+      setNewMessage('');
+      closeSendMessageModal();
+
+    } catch (error) {
+      console.error("Error adding task:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "Something went wrong while adding the task.",
+      });
+    }
+
     // Implement message sending logic here
-    setNewMessage('');
-    closeSendMessageModal();
+
   };
 
   // const handleSendMessageInConversation = () => {
@@ -106,6 +168,7 @@ const Messages = () => {
       {/* User Message Boxes */}
       <div className="space-y-4">
         {users.map((user) => (
+          user?.id !== currentUser?.id ?
           <div
             key={user.id}
             className="bg-white p-4 rounded-lg shadow-md border cursor-pointer"
@@ -114,6 +177,7 @@ const Messages = () => {
             <h3 className="text-lg font-bold">{user.name}</h3>
             <p className="text-gray-600">{getRecentMessage(user.id)}</p>
           </div>
+          : ""
         ))}
       </div>
       {/* Send Message Modal */}

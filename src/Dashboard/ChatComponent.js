@@ -1,6 +1,6 @@
 import React,{useState,useEffect, useRef} from "react";
 
-const ChatComponent = ({ users,currentUser,selectedUser, messages,onClose}) => {
+const ChatComponent = ({ users,currentUser,selectedUser, messages,onClose,onSendMessage}) => {
     // const [isChatOpen, setIsChatOpen] = useState(false);
     // const [selectedUser, setSelectedUser] = useState(null);
     const [chatMessages, setChatMessages] = useState(messages);
@@ -41,6 +41,7 @@ const ChatComponent = ({ users,currentUser,selectedUser, messages,onClose}) => {
   
       // Update the chat messages state
       setChatMessages([...chatMessages, message]);
+      onSendMessage(true,message)
       setNewMessage('');
   
       // Scroll to the bottom after sending a message
