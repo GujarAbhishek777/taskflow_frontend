@@ -5,13 +5,13 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ Start as true
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
-    console.log("sdjfkdsjf",token)
+    console.log("sdjfkdsjf", token)
     if (token) {
-      setLoading(true); 
+      setLoading(true);
       fetch(`${process.env.REACT_APP_API_URL}/api/v1/check_auth`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -21,16 +21,16 @@ const AuthProvider = ({ children }) => {
             setUser(data.user);
           } else {
             localStorage.removeItem("jwt");
-            setUser(null); // ✅ Explicitly set user to null if token is invalid
+            setUser(null);
           }
         })
         .catch(() => {
           localStorage.removeItem("jwt");
           setUser(null);
         })
-        .finally(() => setLoading(false)); // ✅ Stop loading after request
+        .finally(() => setLoading(false));
     } else {
-      setLoading(false); 
+      setLoading(false);
     }
   }, []);
 
@@ -46,7 +46,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
-      {loading ? <Loader  loading={loading} /> : children}
+      {loading ? <Loader loading={loading} /> : children}
     </AuthContext.Provider>
   );
 };

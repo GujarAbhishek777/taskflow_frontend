@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaTasks, FaUserFriends, FaEnvelope,FaChartBar, FaBars, FaTimes, FaBell, FaSignOutAlt,FaTachometerAlt } from "react-icons/fa";
+import { FaTasks, FaUserFriends, FaEnvelope, FaChartBar, FaBars, FaTimes, FaBell, FaSignOutAlt, FaTachometerAlt } from "react-icons/fa";
 import logo from "./../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
@@ -7,16 +7,16 @@ import { useNavigate } from "react-router-dom";
 const Page = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log("sdfhskfhskdf",user)
+  console.log("sdfhskfhskdf", user)
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
     localStorage.removeItem("user");
-    navigate("/login"); // or whatever your login route is
+    navigate("/login");
   };
-    // Count tasks per status
-    
+
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -27,41 +27,41 @@ const Page = ({ children }) => {
           </button>
           <nav className="mt-4">
             <ul>
-              <li className="p-4 hover:bg-gray-700 flex items-center cursor-pointer" onClick={()=>{
+              <li className="p-4 hover:bg-gray-700 flex items-center cursor-pointer" onClick={() => {
                 navigate('/dashboard');
               }}>
                 <FaTachometerAlt size={20} className="mr-3" /> {isSidebarOpen && "Dashboard"}
-                </li>
-              <li className="p-4 hover:bg-gray-700 flex items-center" onClick={()=>{
+              </li>
+              <li className="p-4 hover:bg-gray-700 flex items-center" onClick={() => {
                 navigate('/users');
               }}>
                 <FaUserFriends size={20} className="mr-3" /> {isSidebarOpen && "Users"}
               </li>
-              <li className="p-4 hover:bg-gray-700 flex items-center" onClick={()=>{
+              <li className="p-4 hover:bg-gray-700 flex items-center" onClick={() => {
                 navigate('/tasks');
               }}>
                 <FaTasks size={20} className="mr-3" /> {isSidebarOpen && "Tasks"}
               </li>
-              <li className="p-4 hover:bg-gray-700 flex items-center" onClick={()=>{
+              <li className="p-4 hover:bg-gray-700 flex items-center" onClick={() => {
                 navigate('/messages');
               }}>
                 <FaEnvelope size={20} className="mr-3" /> {isSidebarOpen && "Messages"}
               </li>
               <li
-              className="p-4 hover:bg-gray-700 flex items-center"
-              onClick={() => {
-                navigate('/analytics');
-              }}
-            >
-              <FaChartBar size={20} className="mr-3" /> {isSidebarOpen && 'Analytics'}
-            </li>
+                className="p-4 hover:bg-gray-700 flex items-center"
+                onClick={() => {
+                  navigate('/analytics');
+                }}
+              >
+                <FaChartBar size={20} className="mr-3" /> {isSidebarOpen && 'Analytics'}
+              </li>
             </ul>
           </nav>
         </div>
-        
+
         {/* Logout Button */}
         <button className="p-4 hover:bg-red-600 flex items-center w-full text-left"
-         onClick={handleLogout}
+          onClick={handleLogout}
         >
           <FaSignOutAlt size={20} className="mr-3" /> {isSidebarOpen && "Logout"}
         </button>
@@ -75,36 +75,36 @@ const Page = ({ children }) => {
             <span className="text-l font-semibold text-gray-700">{user?.client_name || ''}</span>
           </div>
           <div className="flex items-center space-x-4">
-  {/* Notification Icon */}
-  <button className="relative p-2 rounded-full hover:bg-gray-200 focus:outline-none">
-    <FaBell size={24} className="text-gray-600" />
-    {/* Notification Badge */}
-    <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
-  </button>
+            {/* Notification Icon */}
+            <button className="relative p-2 rounded-full hover:bg-gray-200 focus:outline-none">
+              <FaBell size={24} className="text-gray-600" />
+              {/* Notification Badge */}
+              <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+            </button>
 
             {/* User Profile */}
             <div className="flex items-center space-x-2">
-                {/* Avatar with Status Indicator */}
-                <div className="relative">
+              {/* Avatar with Status Indicator */}
+              <div className="relative">
                 <img
-                    className="w-10 h-10 rounded-full border-2 border-white"
-                    src={'https://www.gravatar.com/avatar/HASH?d=identicon'}
-                    alt="User Avatar"
+                  className="w-10 h-10 rounded-full border-2 border-white"
+                  src={'https://www.gravatar.com/avatar/HASH?d=identicon'}
+                  alt="User Avatar"
                 />
                 {/* Status Indicator */}
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-                </div>
+              </div>
 
-                {/* Username */}
-                <span className="text-gray-700 font-semibold pr-10">{user?.name || 'Abhishek Gujar'}</span>
+              {/* Username */}
+              <span className="text-gray-700 font-semibold pr-10">{user?.name || 'Abhishek Gujar'}</span>
             </div>
-            </div>
+          </div>
 
         </header>
 
-      {/* Other components should be inside  */}
-      {children}
-            
+        {/* Other components should be inside  */}
+        {children}
+
       </div>
 
 
